@@ -378,23 +378,18 @@ function render(){
   grid.innerHTML='';
   // Filter songs based on active category
   const list=active==='All'?SONGS:SONGS.filter(s=>s.category===active);
-// Add click event listeners to filter buttons
+  // Update the count display
+  document.getElementById('cnt').textContent=list.length;
+  // Create and append cards for each song
+  list.forEach(s=>grid.appendChild(mkCard(s)));
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────
 document.querySelectorAll('.fbtn').forEach(btn=>{
   btn.addEventListener('click',function(){
-    // Set the active filter to the clicked button's data-f
     active=this.dataset.f;
-    // Update button classes to show active state
     document.querySelectorAll('.fbtn').forEach(b=>{
       b.className='fbtn';
-      const map={All:'a-all',School:'a-school',Personal:'a-personal',Concept:'a-concept'};
-      if(b.dataset.f===active)b.classList.add(map[active]);
-    });
-    // Re-render the grid
-    render();
-  });
-});
-
-// Initial render      b.className='fbtn';
       const map={All:'a-all',School:'a-school',Personal:'a-personal',Concept:'a-concept'};
       if(b.dataset.f===active)b.classList.add(map[active]);
     });
