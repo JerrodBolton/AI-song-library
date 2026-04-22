@@ -1,985 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MY SOUND — Music Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <title>Jerrod's AI Song Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --black: #0a0a0a;
-      --off-black: #111111;
-      --card-bg: #161616;
-      --border: #222222;
-      --white: #f0ede6;
-      --muted: #666666;
-      --accent: #e8ff47;
-      --accent2: #ff4757;
-      --school: #47e8b4;
-      --personal: #e847a8;
-      --concept: #e8a847;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Noise texture overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.4;
-    }
-
-    /* ─── HEADER ─── */
-    header {
-      position: relative;
-      padding: 60px 40px 40px;
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    header::after {
-      content: 'SOUND';
-      position: absolute;
-      right: -20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(120px, 20vw, 280px);
-      color: transparent;
-      -webkit-text-stroke: 1px #1e1e1e;
-      pointer-events: none;
-      line-height: 1;
-      letter-spacing: -4px;
-    }
-
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 24px;
-    }
-
-    .logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 8vw, 96px);
-      line-height: 0.9;
-      letter-spacing: -1px;
-      color: var(--white);
-    }
-
-    .logo span {
-      color: var(--accent);
-      display: block;
-    }
-
-    .header-meta {
-      text-align: right;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .header-meta b {
-      color: var(--accent);
-    }
-
-    .tagline {
-      font-size: 13px;
-      color: var(--muted);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      font-family: 'Space Mono', monospace;
-      position: relative;
-      z-index: 1;
-    }
-
-    .tagline::before {
-      content: '▶';
-      margin-right: 8px;
-      color: var(--accent);
-    }
-
-    /* ─── WAVEFORM ANIMATION (decorative) ─── */
-    .waveform {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      padding: 20px 40px;
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .waveform-bar {
-      width: 3px;
-      border-radius: 2px;
-      background: var(--border);
-      animation: wave 1.2s ease-in-out infinite;
-    }
-
-    .waveform-bar:nth-child(odd) { background: #222; }
-
-    @keyframes wave {
-      0%, 100% { height: 4px; }
-      50% { height: var(--h, 20px); }
-    }
-
-    /* ─── CONTROLS ─── */
-    .controls {
-      padding: 28px 40px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .controls-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-right: 4px;
-    }
-
-    .filter-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 8px 18px;
-      border-radius: 2px;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-
-    .filter-btn:hover {
-      border-color: var(--white);
-      color: var(--white);
-    }
-
-    .filter-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--black);
-      font-weight: 700;
-    }
-
-    .filter-btn[data-cat="School"].active { background: var(--school); border-color: var(--school); }
-    .filter-btn[data-cat="Personal"].active { background: var(--personal); border-color: var(--personal); }
-    .filter-btn[data-cat="Concept"].active { background: var(--concept); border-color: var(--concept); }
-
-    .song-count {
-      margin-left: auto;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .song-count span { color: var(--accent); }
-
-    /* ─── GRID ─── */
-    .grid {
-      padding: 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1px;
-      background: var(--border);
-    }
-
-    /* ─── SONG CARD ─── */
-    .card {
-      background: var(--card-bg);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-      animation: fadeIn 0.4s ease both;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--cat-color, var(--border));
-      transition: width 0.3s ease;
-    }
-
-    .card:hover::before { width: 6px; }
-
-    .card:hover { background: #1c1c1c; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .track-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 48px;
-      line-height: 1;
-      color: #1f1f1f;
-      letter-spacing: -1px;
-      transition: color 0.2s;
-    }
-
-    .card:hover .track-num { color: #2a2a2a; }
-
-    .card.playing .track-num { color: var(--cat-color, var(--accent)); }
-
-    .category-badge {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border: 1px solid currentColor;
-      border-radius: 2px;
-      color: var(--cat-color, var(--muted));
-    }
-
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(22px, 3vw, 30px);
-      line-height: 1.05;
-      letter-spacing: 0.5px;
-      color: var(--white);
-      transition: color 0.2s;
-    }
-
-    .card.playing .card-title { color: var(--cat-color, var(--accent)); }
-
-    .card-meta {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .meta-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .meta-value {
-      font-size: 13px;
-      color: var(--white);
-      font-weight: 400;
-    }
-
-    /* ─── PLAYER SECTION ─── */
-    .player-section {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      margin-top: 4px;
-    }
-
-    .card.playing .player-section { display: flex; }
-
-    /* Progress bar */
-    .progress-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .progress-time {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      min-width: 36px;
-    }
-
-    .progress-bar {
-      flex: 1;
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--cat-color, var(--accent));
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.1s linear;
-      position: relative;
-    }
-
-    .progress-fill::after {
-      content: '';
-      position: absolute;
-      right: -4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 8px;
-      height: 8px;
-      background: var(--cat-color, var(--accent));
-      border-radius: 50%;
-    }
-
-    /* Controls row */
-    .player-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .play-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--cat-color, var(--accent));
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: transform 0.15s, opacity 0.15s;
-    }
-
-    .play-btn:hover { transform: scale(1.08); }
-    .play-btn:active { transform: scale(0.95); }
-
-    .play-btn svg { fill: var(--black); width: 14px; height: 14px; }
-
-    .volume-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-left: auto;
-    }
-
-    .vol-icon {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    input[type=range].vol-slider {
-      -webkit-appearance: none;
-      width: 70px;
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    input[type=range].vol-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 10px;
-      height: 10px;
-      background: var(--white);
-      border-radius: 50%;
-    }
-
-    /* EQ bars (playing animation) */
-    .eq-bars {
-      display: none;
-      align-items: flex-end;
-      gap: 2px;
-      height: 16px;
-    }
-
-    .card.playing.is-playing .eq-bars { display: flex; }
-
-    .eq-bar {
-      width: 3px;
-      background: var(--cat-color, var(--accent));
-      border-radius: 1px;
-      animation: eq 0.8s ease-in-out infinite;
-    }
-
-    .eq-bar:nth-child(1) { animation-delay: 0s; --eq-h: 8px; }
-    .eq-bar:nth-child(2) { animation-delay: 0.15s; --eq-h: 16px; }
-    .eq-bar:nth-child(3) { animation-delay: 0.05s; --eq-h: 12px; }
-    .eq-bar:nth-child(4) { animation-delay: 0.25s; --eq-h: 16px; }
-    .eq-bar:nth-child(5) { animation-delay: 0.1s; --eq-h: 6px; }
-
-    @keyframes eq {
-      0%, 100% { height: 3px; }
-      50% { height: var(--eq-h, 12px); }
-    }
-
-    /* ─── PLAY TRIGGER (for non-expanded cards) ─── */
-    .card-play-trigger {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .play-trigger-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: transparent;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .play-trigger-btn:hover {
-      border-color: var(--cat-color, var(--accent));
-      background: var(--cat-color, var(--accent));
-    }
-
-    .play-trigger-btn:hover svg { fill: var(--black); }
-
-    .play-trigger-btn svg {
-      fill: var(--muted);
-      width: 12px;
-      height: 12px;
-      transition: fill 0.2s;
-    }
-
-    .play-hint {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .eq-inline {
-      display: none;
-      align-items: flex-end;
-      gap: 2px;
-      height: 14px;
-      margin-left: 4px;
-    }
-
-    .card.is-playing .eq-inline { display: flex; }
-    .card.is-playing .play-hint { display: none; }
-
-    .eq-inline .eq-bar { width: 2px; }
-
-    .card.playing .card-play-trigger { display: none; }
-
-    /* ─── NOW PLAYING BAR ─── */
-    .now-playing-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #0d0d0d;
-      border-top: 1px solid var(--border);
-      padding: 14px 40px;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      z-index: 100;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-
-    .now-playing-bar.visible { transform: translateY(0); }
-
-    .np-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 160px;
-    }
-
-    .np-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      letter-spacing: 0.5px;
-      color: var(--white);
-    }
-
-    .np-style {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .np-progress {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .np-bar {
-      flex: 1;
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    .np-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
-    .np-time {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      min-width: 40px;
-    }
-
-    .np-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .np-play-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.15s;
-    }
-
-    .np-play-btn:hover { transform: scale(1.08); }
-    .np-play-btn svg { fill: var(--black); width: 12px; height: 12px; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      padding: 40px;
-      border-top: 1px solid var(--border);
-      margin-top: 1px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .footer-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 0.5px;
-      color: var(--white);
-    }
-
-    .footer-title span { color: var(--accent); }
-
-    .footer-meta {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      line-height: 1.8;
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 600px) {
-      header, .controls, .grid, footer { padding-left: 20px; padding-right: 20px; }
-      .grid { grid-template-columns: 1fr; }
-      .now-playing-bar { padding: 14px 20px; gap: 12px; }
-      .np-info { min-width: 100px; }
-      header::after { display: none; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:#030404;color:#cfc0a0;font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:#030404}
+    ::-webkit-scrollbar-thumb{background:rgba(255,101,0,0.25);border-radius:3px}
+
+    /* ── COSMIC BACKGROUND ── */
+    #bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+    #space-base{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 44%,#120a00 0%,#04050b 48%,#020304 100%)}
+    #star-canvas{position:absolute;inset:0;width:100%;height:100%}
+
+    /* Nebula layers */
+    .neb{position:absolute;mix-blend-mode:screen}
+    #nL1{top:-10%;left:-15%;width:68%;height:62%;background:radial-gradient(ellipse at 38% 28%,rgba(18,110,35,.78) 0%,rgba(8,60,20,.45) 38%,transparent 70%);filter:blur(30px)}
+    #nL2{top:-2%;left:2%;width:52%;height:44%;background:radial-gradient(ellipse at 35% 22%,rgba(55,210,80,.32) 0%,rgba(12,80,28,.2) 42%,transparent 70%);filter:blur(16px)}
+    #nL3{top:6%;left:10%;width:32%;height:28%;background:radial-gradient(ellipse at 28% 38%,rgba(90,230,100,.18) 0%,transparent 60%);filter:blur(10px)}
+    #nR1{top:-10%;right:-15%;width:68%;height:62%;background:radial-gradient(ellipse at 62% 28%,rgba(18,110,35,.78) 0%,rgba(8,60,20,.45) 38%,transparent 70%);filter:blur(30px)}
+    #nR2{top:-2%;right:2%;width:52%;height:44%;background:radial-gradient(ellipse at 65% 22%,rgba(55,210,80,.32) 0%,rgba(12,80,28,.2) 42%,transparent 70%);filter:blur(16px)}
+    #nR3{top:6%;right:10%;width:32%;height:28%;background:radial-gradient(ellipse at 72% 38%,rgba(90,230,100,.18) 0%,transparent 60%);filter:blur(10px)}
+    #dark-arch{position:absolute;top:0;left:18%;right:18%;height:52%;background:radial-gradient(ellipse at 50% 0%,rgba(3,4,9,.95) 0%,transparent 80%)}
+
+    /* Planet */
+    #planet-glow{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);width:900px;height:550px;background:radial-gradient(ellipse at 50% 88%,rgba(255,90,0,.5) 0%,rgba(200,50,0,.28) 22%,rgba(100,25,0,.12) 48%,transparent 70%);filter:blur(6px)}
+    #planet-disc{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffb530 0%,#ff6800 25%,#cc3800 52%,#6e1800 78%,#280600 100%);box-shadow:0 0 0 5px rgba(255,120,0,.1),0 0 70px 22px rgba(255,90,0,.55),0 0 160px 55px rgba(255,60,0,.28),0 0 320px 110px rgba(180,35,0,.14)}
+    #planet-corona{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;background:transparent;box-shadow:inset 0 -8px 40px rgba(255,200,60,.35),0 0 0 2px rgba(255,170,40,.5)}
+    #ground-glow{position:absolute;bottom:0;left:0;right:0;height:32%;background:linear-gradient(180deg,transparent 0%,rgba(70,18,0,.32) 55%,rgba(35,8,0,.65) 100%)}
+    #terrain-left{position:absolute;bottom:0;left:0;width:52%;height:24%}
+    #terrain-right{position:absolute;bottom:0;right:0;width:52%;height:24%}
+    #ground-floor{position:absolute;bottom:0;left:0;right:0;height:9%;background:linear-gradient(180deg,#0e0b07 0%,#050403 100%)}
+
+    /* ── LAYOUT ── */
+    #content{position:relative;z-index:1;padding-bottom:220px}
+
+    /* ── HEADER ── */
+    header{padding:clamp(44px,6vw,88px) clamp(20px,5vw,60px) clamp(36px,5vw,60px);text-align:center;position:relative}
+    .scan-line{position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(61,255,122,.38),rgba(255,101,0,.38),transparent)}
+    .eyebrow{font-family:'Orbitron',monospace;font-size:clamp(8px,1vw,10px);letter-spacing:.48em;color:#3dff7a;text-shadow:0 0 18px rgba(61,255,122,.65);margin-bottom:22px;text-transform:uppercase;opacity:.88}
+    .t1{font-family:'Orbitron',sans-serif;font-size:clamp(30px,7vw,80px);font-weight:900;letter-spacing:.07em;line-height:1;color:#ede0c4;text-shadow:0 0 60px rgba(255,101,0,.28);margin-bottom:6px}
+    .t2{font-family:'Orbitron',sans-serif;font-size:clamp(30px,7vw,80px);font-weight:900;letter-spacing:.07em;line-height:1;color:#ff6500;text-shadow:0 0 50px rgba(255,101,0,.85),0 0 110px rgba(255,101,0,.28);margin-bottom:30px}
+    .subtitle{font-family:'Rajdhani',sans-serif;font-size:clamp(12px,1.8vw,15px);color:rgba(160,140,80,.55);letter-spacing:.22em;text-transform:uppercase;font-weight:400}
+    .stats{display:flex;justify-content:center;gap:clamp(24px,5vw,68px);margin-top:40px}
+    .stat{text-align:center}
+    .stat-val{font-family:'Orbitron',monospace;font-size:clamp(20px,3vw,32px);font-weight:900}
+    .stat-lbl{font-family:monospace;font-size:9px;letter-spacing:.22em;color:rgba(140,120,70,.45);margin-top:5px;text-transform:uppercase}
+
+    /* ── FILTER ── */
+    #filters{display:flex;align-items:center;justify-content:center;gap:10px;padding:0 20px 38px;flex-wrap:wrap}
+    .fbtn{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:.18em;padding:10px 22px;border-radius:5px;text-transform:uppercase;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:transparent;color:rgba(160,140,90,.45);transition:all .25s}
+    .fbtn:hover{border-color:rgba(255,101,0,.4);color:rgba(255,101,0,.8);background:rgba(255,101,0,.05)}
+    .fbtn.a-all    {border-color:#ff6500;color:#ff6500;background:rgba(255,101,0,.14);box-shadow:0 0 20px rgba(255,101,0,.18);text-shadow:0 0 14px #ff6500}
+    .fbtn.a-school {border-color:#ff6500;color:#ff6500;background:rgba(255,101,0,.14);box-shadow:0 0 20px rgba(255,101,0,.18);text-shadow:0 0 14px #ff6500}
+    .fbtn.a-personal{border-color:#3dff7a;color:#3dff7a;background:rgba(61,255,122,.1);box-shadow:0 0 20px rgba(61,255,122,.14);text-shadow:0 0 14px #3dff7a}
+    .fbtn.a-concept{border-color:#ffc230;color:#ffc230;background:rgba(255,194,48,.12);box-shadow:0 0 20px rgba(255,194,48,.14);text-shadow:0 0 14px #ffc230}
+    #tcount{font-family:monospace;font-size:10px;color:rgba(110,90,50,.45);margin-left:8px}
+    #tcount span{color:#ff6500}
+
+    /* ── GRID ── */
+    #grid{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,32px);display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+
+    /* ── CARD ── */
+    .card{position:relative;background:linear-gradient(145deg,#0c0a07 0%,#090806 100%);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease,background .3s ease}
+    .card:hover{transform:translateY(-3px);background:linear-gradient(145deg,#111009 0%,#0d0b08 100%)}
+    .card[data-cat="School"]:hover  {border-color:rgba(255,101,0,.4); box-shadow:0 0 36px rgba(255,101,0,.2), 0 14px 44px rgba(0,0,0,.75)}
+    .card[data-cat="Personal"]:hover{border-color:rgba(61,255,122,.35);box-shadow:0 0 36px rgba(61,255,122,.16),0 14px 44px rgba(0,0,0,.75)}
+    .card[data-cat="Concept"]:hover {border-color:rgba(255,194,48,.35);box-shadow:0 0 36px rgba(255,194,48,.16),0 14px 44px rgba(0,0,0,.75)}
+    .ctop{position:absolute;top:0;left:14px;right:14px;height:1px;border-radius:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);transition:background .3s}
+    .card[data-cat="School"]:hover  .ctop{background:linear-gradient(90deg,transparent,rgba(255,101,0,.6),transparent)}
+    .card[data-cat="Personal"]:hover .ctop{background:linear-gradient(90deg,transparent,rgba(61,255,122,.55),transparent)}
+    .card[data-cat="Concept"]:hover  .ctop{background:linear-gradient(90deg,transparent,rgba(255,194,48,.55),transparent)}
+
+    .card-hdr{display:flex;justify-content:space-between;align-items:center}
+    .badge{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.22em;padding:4px 12px;border-radius:3px}
+    .badge.school  {color:#ff6500;background:rgba(255,101,0,.14); border:1px solid rgba(255,101,0,.25); text-shadow:0 0 12px rgba(255,101,0,.7)}
+    .badge.personal{color:#3dff7a;background:rgba(61,255,122,.1);  border:1px solid rgba(61,255,122,.22);text-shadow:0 0 12px rgba(61,255,122,.7)}
+    .badge.concept {color:#ffc230;background:rgba(255,194,48,.1);  border:1px solid rgba(255,194,48,.22);text-shadow:0 0 12px rgba(255,194,48,.7)}
+    .tnum{font-family:monospace;font-size:10px;color:rgba(110,90,55,.35);letter-spacing:.06em}
+
+    .ctitle{font-family:'Orbitron',sans-serif;font-size:clamp(13px,1.7vw,17px);font-weight:700;color:#cfc0a0;letter-spacing:.05em;line-height:1.22;transition:color .3s,text-shadow .3s}
+    .card[data-cat="School"]:hover  .ctitle{color:#ff6500;text-shadow:0 0 22px rgba(255,101,0,.45)}
+    .card[data-cat="Personal"]:hover .ctitle{color:#3dff7a;text-shadow:0 0 22px rgba(61,255,122,.4)}
+    .card[data-cat="Concept"]:hover  .ctitle{color:#ffc230;text-shadow:0 0 22px rgba(255,194,48,.4)}
+    .ctheme{font-family:monospace;font-size:10px;color:rgba(130,110,70,.55);margin-top:5px;letter-spacing:.04em;line-height:1.5}
+
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .mpill{display:flex;flex-direction:column;gap:3px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:6px;padding:7px 12px}
+    .mlbl{font-family:monospace;font-size:8px;color:rgba(110,90,55,.55);letter-spacing:.18em}
+    .mval{font-family:'Orbitron',monospace;font-size:10px;color:#a08860;font-weight:500}
+    .cdiv{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent)}
+
+    /* Play trigger */
+    .ptrig{background:transparent;border-radius:8px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:.2em;padding:11px;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .25s}
+    .ptrig.school  {border:1px solid rgba(255,101,0,.3); color:#ff6500;text-shadow:0 0 10px rgba(255,101,0,.6)}
+    .ptrig.personal{border:1px solid rgba(61,255,122,.28);color:#3dff7a;text-shadow:0 0 10px rgba(61,255,122,.6)}
+    .ptrig.concept {border:1px solid rgba(255,194,48,.28);color:#ffc230;text-shadow:0 0 10px rgba(255,194,48,.6)}
+    .ptrig.school:hover  {background:rgba(255,101,0,.1); box-shadow:0 0 18px rgba(255,101,0,.14)}
+    .ptrig.personal:hover{background:rgba(61,255,122,.08);box-shadow:0 0 18px rgba(61,255,122,.12)}
+    .ptrig.concept:hover {background:rgba(255,194,48,.08);box-shadow:0 0 18px rgba(255,194,48,.12)}
+
+    /* ── AUDIO PLAYER ── */
+    .aplayer{display:flex;flex-direction:column;gap:12px}
+    .prow{display:flex;align-items:center;gap:10px}
+    .tlbl{font-family:monospace;font-size:10px;color:#6a5a40;min-width:32px}
+    .tlbl.r{text-align:right}
+    .ptrack{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.06);cursor:pointer;position:relative}
+    .pfill{position:absolute;left:0;top:0;height:100%;border-radius:2px;width:0%;transition:width .1s linear}
+    .pfill.school  {background:linear-gradient(90deg,rgba(255,101,0,.6),#ff6500)}
+    .pfill.personal{background:linear-gradient(90deg,rgba(61,255,122,.6),#3dff7a)}
+    .pfill.concept {background:linear-gradient(90deg,rgba(255,194,48,.6),#ffc230)}
+    .pthumb{position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:9px;height:9px;border-radius:50%;transition:left .1s linear}
+    .pthumb.school  {background:#ff6500;box-shadow:0 0 8px #ff6500}
+    .pthumb.personal{background:#3dff7a;box-shadow:0 0 8px #3dff7a}
+    .pthumb.concept {background:#ffc230;box-shadow:0 0 8px #ffc230}
+    .crow{display:flex;align-items:center;gap:13px}
+    .playbtn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s}
+    .playbtn.pause{background:linear-gradient(145deg,#ff7200,#c03a00);box-shadow:0 0 28px rgba(255,101,0,.5),0 2px 10px rgba(0,0,0,.6)}
+    .playbtn.play {background:rgba(255,101,0,.1);box-shadow:0 0 0 1px rgba(255,101,0,.45),0 0 22px rgba(255,101,0,.3)}
+    .volrow{display:flex;align-items:center;gap:8px;margin-left:auto}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;background:rgba(255,255,255,.07);outline:none;width:66px;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:#3dff7a;margin-top:-4px;cursor:pointer}
+    .errmsg{font-family:monospace;font-size:9px;color:rgba(255,101,0,.65);margin-left:auto;display:none}
+
+    /* ── LEGEND ── */
+    #legend{display:flex;justify-content:center;gap:28px;padding:40px 20px 0;flex-wrap:wrap}
+    .li{display:flex;align-items:center;gap:8px}
+    .ldot{width:7px;height:7px;border-radius:50%}
+    .ldot.school  {background:#ff6500;box-shadow:0 0 8px #ff6500}
+    .ldot.personal{background:#3dff7a;box-shadow:0 0 8px #3dff7a}
+    .ldot.concept {background:#ffc230;box-shadow:0 0 8px #ffc230}
+    .llbl{font-family:monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+    .llbl.school  {color:#ff6500}
+    .llbl.personal{color:#3dff7a}
+    .llbl.concept {color:#ffc230}
+
+    /* ── FOOTER ── */
+    footer{margin-top:56px;padding:26px 40px;text-align:center;border-top:1px solid rgba(255,255,255,.03);position:relative}
+    footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,101,0,.3),transparent)}
+    .ftxt{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:.22em;color:rgba(120,100,60,.35);text-transform:uppercase}
+    .ftxt span{color:rgba(255,101,0,.4)}
+    .fsub{font-family:monospace;font-size:9px;color:rgba(90,75,45,.28);margin-top:8px}
+    .fsub code{color:rgba(61,255,122,.38)}
+
+    @media(max-width:600px){
+      #grid{grid-template-columns:1fr}
+      #planet-disc,#planet-corona{width:220px;height:220px;bottom:9%}
+      #planet-glow{width:600px}
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+<!-- ── COSMIC BACKGROUND ── -->
+<div id="bg">
+  <div id="space-base"></div>
+  <canvas id="star-canvas"></canvas>
+  <div class="neb" id="nL1"></div>
+  <div class="neb" id="nL2"></div>
+  <div class="neb" id="nL3"></div>
+  <div class="neb" id="nR1"></div>
+  <div class="neb" id="nR2"></div>
+  <div class="neb" id="nR3"></div>
+  <div id="dark-arch"></div>
+  <div id="planet-glow"></div>
+  <div id="planet-disc"></div>
+  <div id="planet-corona"></div>
+  <div id="ground-glow"></div>
+
+  <svg id="terrain-left" viewBox="0 0 620 165" preserveAspectRatio="none">
+    <defs><linearGradient id="rl" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c1510"/><stop offset="55%" stop-color="#0e0b08"/><stop offset="100%" stop-color="#060504"/></linearGradient></defs>
+    <path d="M0,165 L0,95 L35,78 L72,92 L115,56 L162,72 L215,40 L265,60 L315,28 L372,54 L425,20 L482,46 L535,16 L578,40 L620,30 L620,165 Z" fill="url(#rl)"/>
+    <path d="M0,95 L35,78 L72,92 L115,56 L162,72 L215,40 L265,60 L315,28 L372,54 L425,20 L482,46 L535,16 L578,40 L620,30" fill="none" stroke="rgba(255,90,0,0.13)" stroke-width="1.2"/>
+  </svg>
+
+  <svg id="terrain-right" viewBox="0 0 620 165" preserveAspectRatio="none">
+    <defs><linearGradient id="rr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c1510"/><stop offset="55%" stop-color="#0e0b08"/><stop offset="100%" stop-color="#060504"/></linearGradient></defs>
+    <path d="M620,165 L620,95 L585,78 L548,92 L505,56 L458,72 L405,40 L355,60 L305,28 L248,54 L195,20 L138,46 L85,16 L42,40 L0,30 L0,165 Z" fill="url(#rr)"/>
+    <path d="M620,95 L585,78 L548,92 L505,56 L458,72 L405,40 L355,60 L305,28 L248,54 L195,20 L138,46 L85,16 L42,40 L0,30" fill="none" stroke="rgba(255,90,0,0.13)" stroke-width="1.2"/>
+  </svg>
+
+  <div id="ground-floor"></div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div id="content">
+
   <header>
-    <div class="header-top">
-      <div class="logo">MY<span>SOUND</span></div>
-      <div class="header-meta">
-        <div><b>10</b> TRACKS</div>
-        <div><b>3</b> CATEGORIES</div>
-        <div>ORIGINAL MUSIC</div>
-      </div>
+    <div class="scan-line"></div>
+    <p class="eyebrow">◈ &nbsp; AI-Generated Music Portfolio &nbsp; ◈</p>
+    <div class="t1">JERROD'S</div>
+    <div class="t2">AI SONG PORTFOLIO</div>
+    <p class="subtitle">10 original tracks &nbsp;·&nbsp; school &nbsp;·&nbsp; personal &nbsp;·&nbsp; concept</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" style="color:#ff6500;text-shadow:0 0 22px rgba(255,101,0,.7)">10</div><div class="stat-lbl">Tracks</div></div>
+      <div class="stat"><div class="stat-val" style="color:#3dff7a;text-shadow:0 0 22px rgba(61,255,122,.7)">3</div><div class="stat-lbl">Categories</div></div>
+      <div class="stat"><div class="stat-val" style="color:#ffc230;text-shadow:0 0 22px rgba(255,194,48,.7)">100%</div><div class="stat-lbl">Original</div></div>
     </div>
-    <div class="tagline">Original music — school, personal &amp; concept projects</div>
   </header>
 
-  <!-- WAVEFORM (decorative) -->
-  <div class="waveform" id="waveform"></div>
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <span class="controls-label">Filter —</span>
-    <button class="filter-btn active" data-cat="All">All</button>
-    <button class="filter-btn" data-cat="School">School</button>
-    <button class="filter-btn" data-cat="Personal">Personal</button>
-    <button class="filter-btn" data-cat="Concept">Concept</button>
-    <div class="song-count"><span id="visible-count">10</span> tracks</div>
+  <div id="filters">
+    <button class="fbtn a-all" data-f="All">All Tracks</button>
+    <button class="fbtn" data-f="School">School</button>
+    <button class="fbtn" data-f="Personal">Personal</button>
+    <button class="fbtn" data-f="Concept">Concept</button>
+    <span id="tcount">— <span id="cnt">10</span> tracks</span>
   </div>
 
-  <!-- GRID -->
-  <div class="grid" id="grid"></div>
+  <div id="grid"></div>
 
-  <!-- NOW PLAYING BAR -->
-  <div class="now-playing-bar" id="npBar">
-    <div class="np-info">
-      <div class="np-title" id="npTitle">—</div>
-      <div class="np-style" id="npStyle">—</div>
-    </div>
-    <div class="np-progress">
-      <span class="np-time" id="npCurrent">0:00</span>
-      <div class="np-bar" id="npBarProgress">
-        <div class="np-fill" id="npFill"></div>
-      </div>
-      <span class="np-time" id="npDuration">0:00</span>
-    </div>
-    <div class="np-controls">
-      <button class="np-play-btn" id="npPlayBtn" onclick="togglePlayPause()">
-        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-      </button>
-    </div>
+  <div id="legend">
+    <div class="li"><div class="ldot school"></div><span class="llbl school">School</span></div>
+    <div class="li"><div class="ldot personal"></div><span class="llbl personal">Personal</span></div>
+    <div class="li"><div class="ldot concept"></div><span class="llbl concept">Concept</span></div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
-    <div class="footer-title">MY<span>SOUND</span></div>
-    <div class="footer-meta">
-      Original music portfolio<br>
-      All rights reserved
-    </div>
+    <p class="ftxt">Jerrod's AI Song Portfolio &nbsp;·&nbsp; <span>All Rights Reserved</span></p>
+    <p class="fsub">Place MP3 files in a <code>/songs/</code> folder beside this file</p>
   </footer>
 
-  <script>
-    const SONGS = [
-      { title: "Boards Blues", file: "songs/Boards Blues.mp3", style: "Memphis Blues / Jazz Soul", category: "School", mood: "Reflective", theme: "Organizing projects into 6 objectives" },
-      { title: "Production Studios", file: "songs/Production Studios (Carry the Team).mp3", style: "Rap / Motivational", category: "School", mood: "Driven", theme: "Leadership & teamwork struggles" },
-      { title: "SIP (Pressure to Progress)", file: "songs/SIP (Pressure to Progress).mp3", style: "Emotional / Motivational", category: "School", mood: "Intense", theme: "Growth under pressure" },
-      { title: "Talk It Out", file: "songs/Talk It Out.mp3", style: "R&B Soul", category: "Personal", mood: "Emotional", theme: "Relationship communication" },
-      { title: "Do Not Disturb", file: "songs/Do Not disturb.mp3", style: "Alternative / Electronic Rock", category: "Personal", mood: "Futuristic", theme: "Isolation + AI (Susie)" },
-      { title: "Right There", file: "songs/Right There.mp3", style: "Jazz / Neo-Soul", category: "Personal", mood: "Chill", theme: "Answers are in front of you" },
-      { title: "Boss Battle", file: "songs/Boss Battle.mp3", style: "Cinematic / Game Music", category: "Concept", mood: "Epic", theme: "Challenge & competition" },
-      { title: "SuperGlasses", file: "songs/SuperGlasses.mp3", style: "Tech / Futuristic", category: "Concept", mood: "Innovative", theme: "Innovation, wearable tech" },
-      { title: "The Weight of the Latch", file: "songs/The Weight of the Latch.mp3", style: "Emotional / Story-driven", category: "Concept", mood: "Deep", theme: "Responsibility & pressure" },
-      { title: "Food on my mind", file: "songs/Food on my mind.mp3", style: "Fun / Chill", category: "Concept", mood: "Light", theme: "Everyday thoughts" }
-    ];
+</div>
 
-    const CAT_COLORS = {
-      School: '#47e8b4',
-      Personal: '#e847a8',
-      Concept: '#e8a847'
-    };
+<script>
+// Array of song objects with metadata (id, title, file, style, category, mood, theme)
+const SONGS = [
+  {id:1, title:"Boards Blues",              file:"songs/Boards Blues.mp3",                       style:"Memphis Blues / Jazz Soul",   category:"School",  mood:"Reflective", theme:"Organizing projects into 6 objectives"},
+  {id:2, title:"Production Studios",         file:"songs/Production Studios (Carry the Team).mp3",style:"Rap / Motivational",          category:"School",  mood:"Driven",     theme:"Leadership & teamwork struggles"},
+  {id:3, title:"SIP (Pressure to Progress)", file:"songs/SIP (Pressure to Progress).mp3",        style:"Emotional / Motivational",    category:"School",  mood:"Intense",    theme:"Growth under pressure"},
+  {id:4, title:"Talk It Out",                file:"songs/Talk It Out.mp3",                       style:"R&B Soul",                    category:"Personal",mood:"Emotional",  theme:"Relationship communication"},
+  {id:5, title:"Do Not Disturb",             file:"songs/Do Not disturb.mp3",                    style:"Alternative / Electronic Rock",category:"Personal",mood:"Futuristic", theme:"Isolation + AI (Susie)"},
+  {id:6, title:"Right There",                file:"songs/Right There.mp3",                       style:"Jazz / Neo-Soul",             category:"Personal",mood:"Chill",      theme:"Answers are right in front of you"},
+  {id:7, title:"Boss Battle",                file:"songs/Boss Battle.mp3",                       style:"Cinematic / Game Music",      category:"Concept", mood:"Epic",       theme:"Challenge & competition"},
+  {id:8, title:"SuperGlasses",               file:"songs/SuperGlasses.mp3",                      style:"Tech / Futuristic",           category:"Concept", mood:"Innovative", theme:"Wearable tech innovation"},
+  {id:9, title:"The Weight of the Latch",    file:"songs/The Weight of the Latch.mp3",           style:"Emotional / Story-driven",    category:"Concept", mood:"Deep",       theme:"Responsibility & pressure"},
+  {id:10,title:"Food on my mind",            file:"songs/Food on my mind.mp3",                   style:"Fun / Chill",                 category:"Concept", mood:"Light",      theme:"Everyday thoughts"},
+];
 
-    let currentAudio = null;
-    let currentIndex = null;
-    let isPlaying = false;
+const CLS = {School:"school",Personal:"personal",Concept:"concept"};
 
-    // ── Build waveform ──
-    const waveEl = document.getElementById('waveform');
-    for (let i = 0; i < 80; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'waveform-bar';
-      const h = Math.random() * 28 + 4;
-      bar.style.setProperty('--h', h + 'px');
-      bar.style.height = (Math.random() * 12 + 2) + 'px';
-      bar.style.animationDelay = (Math.random() * 1.2) + 's';
-      bar.style.animationDuration = (Math.random() * 0.8 + 0.8) + 's';
-      waveEl.appendChild(bar);
+// ── STARS ─────────────────────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('star-canvas'),ctx=c.getContext('2d');
+  function draw(){
+    c.width=window.innerWidth;c.height=window.innerHeight;
+    ctx.clearRect(0,0,c.width,c.height);
+    for(let i=0;i<180;i++){
+      const s=i*9301+49297;
+      const x=((s*0.7)%1000)/1000*c.width;
+      const y=((s*1.3)%1000)/1000*c.height;
+      const r=((s*0.3)%10)/10*1.2+0.2;
+      const op=((s*0.5)%10)/10*0.5+0.1;
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${op})`;ctx.fill();
     }
+  }
+  window.addEventListener('resize',draw);draw();
+})();
 
-    // ── Render grid ──
-    function renderGrid(filter = 'All') {
-      const grid = document.getElementById('grid');
-      grid.innerHTML = '';
-      const filtered = SONGS.filter(s => filter === 'All' || s.category === filter);
-      document.getElementById('visible-count').textContent = filtered.length;
+// ── HELPERS ───────────────────────────────────────────────────────────────
+// Helper function to format time in seconds to MM:SS string
+function fmt(s){if(!s||isNaN(s))return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
 
-      filtered.forEach((song, i) => {
-        const origIndex = SONGS.indexOf(song);
-        const color = CAT_COLORS[song.category] || '#e8ff47';
-        const num = String(origIndex + 1).padStart(2, '0');
+// ── BUILD PLAYER ──────────────────────────────────────────────────────────
+function mkPlayer(song){
+  const cl=CLS[song.category];
+  const wrap=document.createElement('div');wrap.className='aplayer';
 
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = `card-${origIndex}`;
-        card.style.setProperty('--cat-color', color);
-        card.style.animationDelay = (i * 0.04) + 's';
+  const audio=new Audio(song.file);
+  let playing=false;
 
-        card.innerHTML = `
-          <div class="card-top">
-            <div class="track-num">${num}</div>
-            <div class="category-badge" style="color:${color}">${song.category}</div>
-          </div>
-          <div class="card-title">${song.title}</div>
-          <div class="card-meta">
-            <div class="meta-item">
-              <div class="meta-label">Style</div>
-              <div class="meta-value">${song.style}</div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Mood</div>
-              <div class="meta-value">${song.mood}</div>
-            </div>
-          </div>
-          <div class="card-play-trigger">
-            <button class="play-trigger-btn" onclick="playSong(${origIndex}, event)">
-              <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-            </button>
-            <span class="play-hint">Play track</span>
-            <div class="eq-inline">
-              <div class="eq-bar" style="--eq-h:8px"></div>
-              <div class="eq-bar" style="--eq-h:14px"></div>
-              <div class="eq-bar" style="--eq-h:10px"></div>
-              <div class="eq-bar" style="--eq-h:14px"></div>
-              <div class="eq-bar" style="--eq-h:6px"></div>
-            </div>
-          </div>
-          <div class="player-section">
-            <div class="progress-wrap">
-              <span class="progress-time" id="time-${origIndex}">0:00</span>
-              <div class="progress-bar" id="prog-${origIndex}" onclick="seekTo(${origIndex}, event)">
-                <div class="progress-fill" id="fill-${origIndex}"></div>
-              </div>
-              <span class="progress-time" id="dur-${origIndex}">—</span>
-            </div>
-            <div class="player-controls">
-              <button class="play-btn" id="playbtn-${origIndex}" onclick="togglePlayPause(${origIndex})">
-                <svg viewBox="0 0 24 24" id="playicon-${origIndex}"><polygon points="5,3 19,12 5,21"/></svg>
-              </button>
-              <div class="eq-bars">
-                <div class="eq-bar" style="--eq-h:8px"></div>
-                <div class="eq-bar" style="--eq-h:16px"></div>
-                <div class="eq-bar" style="--eq-h:12px"></div>
-                <div class="eq-bar" style="--eq-h:16px"></div>
-                <div class="eq-bar" style="--eq-h:6px"></div>
-              </div>
-              <div class="volume-wrap">
-                <span class="vol-icon">🔊</span>
-                <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1"
-                  oninput="setVolume(this.value)">
-              </div>
-            </div>
-          </div>
-        `;
+  // Progress row
+  const prow=document.createElement('div');prow.className='prow';
+  const tL=document.createElement('span');tL.className='tlbl';tL.textContent='0:00';
+  const track=document.createElement('div');track.className='ptrack';
+  const fill=document.createElement('div');fill.className='pfill '+cl;
+  const thumb=document.createElement('div');thumb.className='pthumb '+cl;
+  track.append(fill,thumb);
+  const tR=document.createElement('span');tR.className='tlbl r';tR.textContent='0:00';
+  prow.append(tL,track,tR);
 
-        grid.appendChild(card);
-      });
+  // Controls row
+  const crow=document.createElement('div');crow.className='crow';
+  const btn=document.createElement('button');btn.className='playbtn pause';
+  btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>';
+  const volrow=document.createElement('div');volrow.className='volrow';
+  volrow.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(110,90,55,0.5)" stroke-width="2"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+  const vol=document.createElement('input');vol.type='range';vol.min=0;vol.max=1;vol.step=0.05;vol.value=1;
+  volrow.appendChild(vol);
+  const err=document.createElement('span');err.className='errmsg';err.textContent='⚠ Add MP3 to /songs/';
+  crow.append(btn,volrow,err);
+  wrap.append(prow,crow);
 
-      // restore playing state visuals
-      if (currentIndex !== null) {
-        updateCardState(currentIndex, isPlaying);
-      }
+  function upd(){
+    const p=audio.duration?(audio.currentTime/audio.duration)*100:0;
+    fill.style.width=p+'%';thumb.style.left=p+'%';
+    tL.textContent=fmt(audio.currentTime);
+  }
+  function setIcon(){
+    if(playing){
+      btn.className='playbtn play';
+      btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="#ff6500"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    }else{
+      btn.className='playbtn pause';
+      btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>';
     }
+  }
+  audio.addEventListener('timeupdate',upd);
+  audio.addEventListener('loadedmetadata',()=>{tR.textContent=fmt(audio.duration)});
+  audio.addEventListener('ended',()=>{playing=false;setIcon()});
+  audio.addEventListener('error',()=>{err.style.display='block'});
+  btn.addEventListener('click',()=>{
+    if(playing){audio.pause();playing=false;}
+    else{audio.play().catch(()=>{err.style.display='block'});playing=true;}
+    setIcon();
+  });
+  track.addEventListener('click',e=>{
+    if(!audio.duration)return;
+    const r=track.getBoundingClientRect();
+    audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
+  });
+  vol.addEventListener('input',()=>{audio.volume=parseFloat(vol.value)});
+  return wrap;
+}
 
-    function playSong(index, e) {
-      if (e) e.stopPropagation();
+// ── BUILD CARD ────────────────────────────────────────────────────────────
+// Function to create a song card element
+function mkCard(song){
+  // Get the CSS class for the category
+  const cl=CLS[song.category];
+  // Create the card container
+  const card=document.createElement('div');
+  card.className='card';card.dataset.cat=song.category;
 
-      if (currentIndex === index) {
-        togglePlayPause(index);
-        return;
-      }
+  // Set the inner HTML for the card content
+  card.innerHTML=`
+    <div class="ctop"></div>
+    <div class="card-hdr">
+      <span class="badge ${cl}">${song.category.toUpperCase()}</span>
+      <span class="tnum">${String(song.id).padStart(2,'0')} / 10</span>
+    </div>
+    <div>
+      <div class="ctitle">${song.title}</div>
+      <div class="ctheme">${song.theme}</div>
+    </div>
+    <div class="meta">
+      <div class="mpill"><span class="mlbl">STYLE</span><span class="mval">${song.style}</span></div>
+      <div class="mpill"><span class="mlbl">MOOD</span><span class="mval">${song.mood}</span></div>
+    </div>
+    <div class="cdiv"></div>
+  `;
 
-      // stop old
-      if (currentAudio) {
-        currentAudio.pause();
-        if (currentIndex !== null) clearCardPlaying(currentIndex);
-      }
+  // Create the play trigger button
+  const trig=document.createElement('button');
+  trig.className='ptrig '+cl;
+  trig.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg> PLAY TRACK';
+  // Click handler to replace trigger with player
+  trig.addEventListener('click',()=>{trig.remove();card.appendChild(mkPlayer(song))});
+  card.appendChild(trig);
+  return card;
+}
 
-      const song = SONGS[index];
-      currentAudio = new Audio(song.file);
-      currentIndex = index;
+// ── RENDER ────────────────────────────────────────────────────────────────
+// Variable to track the current active filter
+let active='All';
 
-      currentAudio.addEventListener('timeupdate', () => updateProgress(index));
-      currentAudio.addEventListener('loadedmetadata', () => {
-        const el = document.getElementById(`dur-${index}`);
-        if (el) el.textContent = formatTime(currentAudio.duration);
-        document.getElementById('npDuration').textContent = formatTime(currentAudio.duration);
-      });
-      currentAudio.addEventListener('ended', () => {
-        isPlaying = false;
-        updateCardState(index, false);
-        updateNPBar(false);
-      });
-      currentAudio.addEventListener('error', () => {
-        const card = document.getElementById(`card-${index}`);
-        if (card) {
-          const hint = card.querySelector('.play-hint');
-          if (hint) hint.textContent = 'Add MP3 to /songs/';
-        }
-      });
-
-      currentAudio.play().then(() => {
-        isPlaying = true;
-        updateCardState(index, true);
-        updateNPBar(true);
-        updateNowPlayingInfo(song);
-      }).catch(() => {
-        isPlaying = false;
-        // show helper message
-        const card = document.getElementById(`card-${index}`);
-        if (card) {
-          const hint = card.querySelector('.play-hint');
-          if (hint) hint.textContent = '⚠ Add MP3 to /songs/ folder';
-        }
-      });
-    }
-
-    function togglePlayPause(index) {
-      if (index === undefined) index = currentIndex;
-      if (currentAudio && currentIndex === index) {
-        if (isPlaying) {
-          currentAudio.pause();
-          isPlaying = false;
-        } else {
-          currentAudio.play();
-          isPlaying = true;
-        }
-        updateCardState(index, isPlaying);
-        updateNPBar(isPlaying);
-      } else if (index !== undefined) {
-        playSong(index);
-      }
-    }
-
-    function updateProgress(index) {
-      if (!currentAudio) return;
-      const pct = (currentAudio.currentTime / currentAudio.duration) * 100 || 0;
-      const timeStr = formatTime(currentAudio.currentTime);
-
-      const fill = document.getElementById(`fill-${index}`);
-      const time = document.getElementById(`time-${index}`);
-      if (fill) fill.style.width = pct + '%';
-      if (time) time.textContent = timeStr;
-
-      document.getElementById('npFill').style.width = pct + '%';
-      document.getElementById('npCurrent').textContent = timeStr;
-    }
-
-    function seekTo(index, e) {
-      if (!currentAudio || currentIndex !== index) return;
-      const bar = document.getElementById(`prog-${index}`);
-      const rect = bar.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      currentAudio.currentTime = pct * currentAudio.duration;
-    }
-
-    function setVolume(v) {
-      if (currentAudio) currentAudio.volume = parseFloat(v);
-    }
-
-    function updateCardState(index, playing) {
-      const card = document.getElementById(`card-${index}`);
-      if (!card) return;
-      card.classList.toggle('playing', true);
-      card.classList.toggle('is-playing', playing);
-
-      const icon = document.getElementById(`playicon-${index}`);
-      if (icon) {
-        icon.innerHTML = playing
-          ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-          : '<polygon points="5,3 19,12 5,21"/>';
-      }
-    }
-
-    function clearCardPlaying(index) {
-      const card = document.getElementById(`card-${index}`);
-      if (!card) return;
-      card.classList.remove('playing', 'is-playing');
-      const icon = document.getElementById(`playicon-${index}`);
-      if (icon) icon.innerHTML = '<polygon points="5,3 19,12 5,21"/>';
-      const fill = document.getElementById(`fill-${index}`);
-      if (fill) fill.style.width = '0%';
-    }
-
-    function updateNPBar(playing) {
-      const bar = document.getElementById('npBar');
-      const icon = document.getElementById('npPlayBtn').querySelector('svg');
-      bar.classList.toggle('visible', currentIndex !== null);
-      icon.innerHTML = playing
-        ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-        : '<polygon points="5,3 19,12 5,21"/>';
-    }
-
-    function updateNowPlayingInfo(song) {
-      document.getElementById('npTitle').textContent = song.title;
-      document.getElementById('npStyle').textContent = song.style;
-      document.getElementById('npFill').style.background = CAT_COLORS[song.category] || '#e8ff47';
-    }
-
-    function formatTime(s) {
-      if (!s || isNaN(s)) return '0:00';
-      const m = Math.floor(s / 60);
-      const sec = Math.floor(s % 60);
-      return `${m}:${sec.toString().padStart(2, '0')}`;
-    }
-
-    // NP bar progress click
-    document.getElementById('npBarProgress').addEventListener('click', function(e) {
-      if (!currentAudio) return;
-      const rect = this.getBoundingClientRect();
-      currentAudio.currentTime = ((e.clientX - rect.left) / rect.width) * currentAudio.duration;
+// Function to render the song cards based on the active filter
+function render(){
+  // Get the grid container
+  const grid=document.getElementById('grid');
+  // Clear the grid
+  grid.innerHTML='';
+  // Filter songs based on active category
+  const list=active==='All'?SONGS:SONGS.filter(s=>s.category===active);
+// Add click event listeners to filter buttons
+document.querySelectorAll('.fbtn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    // Set the active filter to the clicked button's data-f
+    active=this.dataset.f;
+    // Update button classes to show active state
+    document.querySelectorAll('.fbtn').forEach(b=>{
+      b.className='fbtn';
+      const map={All:'a-all',School:'a-school',Personal:'a-personal',Concept:'a-concept'};
+      if(b.dataset.f===active)b.classList.add(map[active]);
     });
+    // Re-render the grid
+    render();
+  });
+});
 
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        renderGrid(this.dataset.cat);
-      });
+// Initial render      b.className='fbtn';
+      const map={All:'a-all',School:'a-school',Personal:'a-personal',Concept:'a-concept'};
+      if(b.dataset.f===active)b.classList.add(map[active]);
     });
+    render();
+  });
+});
 
-    // Init
-    renderGrid();
-  </script>
+render();
+</script>
 </body>
 </html>
