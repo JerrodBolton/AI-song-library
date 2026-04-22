@@ -1,4 +1,4 @@
-# 🎧 Gerard's AI Song Portfolio
+# 🎧 Jerrod's AI Song Portfolio
 
 A futuristic, space-themed music portfolio showcasing AI-generated songs created throughout my college journey.
 
